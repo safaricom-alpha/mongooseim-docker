@@ -10,7 +10,6 @@ cd -
 
 NODE=mongooseim@${HOSTNAME}
 NODETYPE=sname:${NODE}
-CLUSTER_NODE=mongooseim@${HOSTNAME%-?}-1
 CLUSTER_COOKIE=ejabberd
 ROOT_DIR=${MIM_WORK_DIR}/mongooseim
 MNESIA_DIR=/var/lib/mongooseim/Mnesia.${NODE}
@@ -28,7 +27,7 @@ done
 
 # make sure proper node name is used
 echo "vm.args:"
-sed -i -e "s/-sname.*$/-sname ${NODE}/" ${ETC_DIR}/vm.args
+sed -i -e "s/-sname.*$/-sname ${NODETYPE}/" ${ETC_DIR}/vm.args
 cat ${ETC_DIR}/vm.args
 
 echo "app.config"
@@ -46,8 +45,9 @@ mkdir -p ${LOGS_DIR}
 
 PATH="${MIM_WORK_DIR}/mongooseim/bin:${PATH}"
 CLUSTERING_RESULT=0
-# clusterize? if the numeric nodename suffix is 1 we are the master
-if [ x"${HOSTNAME##*-}" = x"1" ]; then
+
+# clusterize? CLUSTER_NODE env var is not declared, then we're master. 
+if [ -z "$CLUSTER_NODE" ]; then
     echo "MongooseIM cluster primary node ${NODE}"
 elif [ ! -f "${MNESIA_DIR}/schema.DAT" ]; then
     echo "MongooseIM node ${NODE} joining ${CLUSTER_NODE}"
