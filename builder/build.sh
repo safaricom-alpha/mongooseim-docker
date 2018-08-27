@@ -24,7 +24,7 @@ build () {
         cd $workdir && \
         git checkout $commit && \
         tools/configure with-all && \
-        make rel && \
+        make rel_sc && \
         echo "${name}-${commit}-${repo}" > ${version_file} && \
         git describe --always >> ${version_file}
     local build_success=$?
