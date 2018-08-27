@@ -27,7 +27,7 @@ done
 
 # make sure proper node name is used
 echo "vm.args:"
-sed -i -e "s/-sname.*$/-sname ${NODETYPE}/" ${ETC_DIR}/vm.args
+sed -i -e "s/-sname.*$/-sname ${NODE}/" ${ETC_DIR}/vm.args
 cat ${ETC_DIR}/vm.args
 
 echo "app.config"
